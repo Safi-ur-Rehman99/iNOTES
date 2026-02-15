@@ -1,0 +1,18 @@
+{
+  "name": "inotes",
+  "version": "1.0.0",
+  "description": "iNOTES - Full Stack Notes App",
+  "private": true,
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "scripts": {
+    "client": "npm start --workspace=client",
+    "server": "npm start --workspace=server",
+    "arise": "concurrently \"npm run server\" \"npm run client\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
