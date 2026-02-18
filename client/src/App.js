@@ -9,6 +9,7 @@ function App() {
   return (
     <>
     <NoteState>
+    <div className='container'>
     <Router>
       <div className="App">
         <Navbar />
@@ -18,6 +19,7 @@ function App() {
         </Routes>
       </div>
     </Router>
+    </div>
    </NoteState>
     </>
   );
