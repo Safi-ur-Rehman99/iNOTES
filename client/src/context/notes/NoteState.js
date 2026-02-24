@@ -32,19 +32,8 @@ const NoteState=(props)=>{
       },
       body:JSON.stringify({title,description,tag})
     });
-    const json=await response.json();
-    setnotes(json);
-
-    const newNote={
-      "_id": "69942bb4871c691e062147e25",
-      "user": "697f580829b2b3c439960ea5",
-      "title": title,
-      "description": description,
-      "tag": tag,
-      "date": new Date().toISOString(),
-      "__v": 0
-    }
-    setnotes(notes.concat(newNote));
+    const note=await response.json();
+    setnotes(notes.concat(note));
     }
 
    //delete a note
@@ -69,7 +58,7 @@ const NoteState=(props)=>{
       method:"PUT",
       headers:{
         "Content-Type":"application/json",
-        "auth-token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
+        "auth-token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjk3ZjU4MDgyOWIyYjNjNDM5OTYwZWE1In0sImlhdCI6MTc3MDMxODM5NH0.0-pRD3CSRI_J4gPZr8qEzR-7_7MDaRH9vheD7QWfmOw"
       },
       body:JSON.stringify({title,description,tag})
     });

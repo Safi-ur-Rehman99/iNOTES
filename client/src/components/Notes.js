@@ -7,11 +7,12 @@ import AddNote from './AddNote';
 
 const Notes = () => {
   const context = useContext(NoteContext);
-      const [note,setNote]=useState({uTitle:"",uDescription:"",uTag :""})
+      const [note,setNote]=useState({id:"",uTitle:"",uDescription:"",uTag :""})
 
   const ref = useRef(null);
+  const refClose = useRef(null);
 
-  const { notes, getNotes } = context;
+  const { notes, getNotes,editNote } = context;
   useEffect(() => {
     getNotes();
     // eslint-disable-next-line
@@ -19,13 +20,14 @@ const Notes = () => {
 
   const updateNote = (currentNote) => {
     ref.current.click();
-    setNote({uTitle:currentNote.title,uDescription:currentNote.description,uTag:currentNote.tag})
+    setNote({id:currentNote._id,uTitle:currentNote.title,uDescription:currentNote.description,uTag:currentNote.tag})
   }
 
   
       const handleClick=(e)=>{
           e.preventDefault();
-
+          editNote(note.id,note.uTitle,note.uDescription,note.uTag);
+          refClose.current.click();
       }
   
        const onChange=(e)=>{
@@ -65,7 +67,7 @@ const Notes = () => {
                 </form>
               </div>
               <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" ref={refClose}>Close</button>
                 <button type="button"  className="btn btn-primary" onClick={handleClick}>Save changes</button>
               </div>
             </div>

@@ -11,6 +11,7 @@ const {addNote}=context;
     const handleClick=(e)=>{
         e.preventDefault();
         addNote(note.title,note.description,note.tag);
+        setNote({title:"",description:"",tag:""});
     }
 
      const onChange=(e)=>{
@@ -29,15 +30,15 @@ const {addNote}=context;
       <form>
   <div className="mb-3">
     <label htmlFor="Title" className="form-label">Title</label>
-    <input type="text" className="form-control" id="Title" name="title" onChange={onChange} />
+    <input type="text" className="form-control" id="Title" name="title" value={note.title} onChange={onChange} />
   </div>
   <div className="mb-3">
     <label htmlFor="Description" className="form-label" >Description</label>
-    <input type="text" className="form-control" id="Description" name="description" onChange={onChange} />
+    <input type="text" className="form-control" id="Description" name="description" value={note.description} onChange={onChange} />
   </div>
     <div className="mb-3">
     <label htmlFor="Tag" className="form-label" >Tag</label>
-    <input type="text" className="form-control" id="Tag" name="tag" onChange={onChange} />
+    <input type="text" className="form-control" id="Tag" name="tag" value={note.tag}   onChange={onChange} />
   </div>
   
   <button type="submit" className="btn btn-primary" onClick={handleClick}>Add Notes</button>
