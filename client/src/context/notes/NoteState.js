@@ -9,6 +9,7 @@ const NoteState=(props)=>{
 
    //get all notes
    const getNotes=async()=>{
+    try {
     const response=await fetch(`${host}/api/notes/fetchnotes`,{
       method:"GET",
       headers:{
@@ -17,13 +18,20 @@ const NoteState=(props)=>{
       }
     });
     const json=await response.json();
-    setnotes(json);
+    if(response.ok){
+      setnotes(json);
+    } else {
+      props.showAlert("Failed to fetch notes", "danger");
+    }
+    } catch (error) {
+      props.showAlert("Server error. Could not fetch notes", "danger");
+    }
    }
 
    //add a note
 
    const addNote=async (title,description,tag)=>{
-
+    try {
      const response=await fetch(`${host}/api/notes/addnote`,{
       method:"POST",
       headers:{
@@ -33,12 +41,20 @@ const NoteState=(props)=>{
       body:JSON.stringify({title,description,tag})
     });
     const note=await response.json();
-    setnotes(notes.concat(note));
+    if(response.ok){
+      setnotes(notes.concat(note));
+      props.showAlert("Note added successfully", "success");
+    } else {
+      props.showAlert("Failed to add note", "danger");
+    }
+    } catch (error) {
+      props.showAlert("Server error. Could not add note", "danger");
+    }
     }
 
    //delete a note
    const deleteNote=async (id)=>{
-
+    try {
          const response=await fetch(`${host}/api/notes/deletenote/${id}`,{
       method:"DELETE",
       headers:{
@@ -47,13 +63,20 @@ const NoteState=(props)=>{
       },
      
     });
-
-
-    setnotes(notes.filter((note)=>note._id!==id));
+    if(response.ok){
+      setnotes(notes.filter((note)=>note._id!==id));
+      props.showAlert("Note deleted successfully", "success");
+    } else {
+      props.showAlert("Failed to delete note", "danger");
+    }
+    } catch (error) {
+      props.showAlert("Server error. Could not delete note", "danger");
+    }
    }
 
    //edit a note
     const editNote=async (id,title,description,tag)=>{
+      try {
        const response=await fetch(`${host}/api/notes/updatenote/${id}`,{
       method:"PUT",
       headers:{
@@ -62,16 +85,20 @@ const NoteState=(props)=>{
       },
       body:JSON.stringify({title,description,tag})
     });
-    const json=await response.json();
-    setnotes(json);
-
-
+    if(response.ok){
       setnotes(notes.map((note)=>{
         if(note._id===id){
           return {...note,title,description,tag}
         }
         return note;
-      }))
+      }));
+      props.showAlert("Note updated successfully", "success");
+    } else {
+      props.showAlert("Failed to update note", "danger");
+    }
+      } catch (error) {
+        props.showAlert("Server error. Could not update note", "danger");
+      }
     }
 
     

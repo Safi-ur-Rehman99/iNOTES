@@ -17,6 +17,7 @@ router.post('/createuser', [
     body('name', 'Name must be at least 3 characters').isLength({ min: 3 }),
 ], async (req, res) => 
     {
+        let success=false;
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
@@ -27,7 +28,8 @@ router.post('/createuser', [
     let user= await User.findOne({email:req.body.email});
     if(user){
         return res.status(400).json({
-            error:"sorry a user with this email already exists"
+            error:"sorry a user with this email already exists",
+            success:false
 
         })
     }
@@ -45,7 +47,8 @@ router.post('/createuser', [
         }
     }
     const authToken=jwt.sign(data,JWT_SECRET);
-    res.json({authToken});
+    success=true;
+    res.json({success,authToken});
     
 
 
@@ -63,6 +66,7 @@ router.post('/login', [
     body('password', 'Password should not be empty').exists(),
 ], async (req, res) => {
     const errors = validationResult(req);
+    let success=false;
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
@@ -71,6 +75,7 @@ router.post('/login', [
         const user = await User.findOne({email});
         if (!user) {
             return res.status(400).json({
+                success:false,
                 error: "Please enter valid credentials"
             });
         }
@@ -78,6 +83,7 @@ router.post('/login', [
         const compairePassword = await bcrypt.compare(password, user.password);
         if (!compairePassword) {
             return res.status(400).json({
+                success:false,
                 error: "Please enter valid credentials"
             });
         }
@@ -88,7 +94,8 @@ router.post('/login', [
             }
         };
         const authToken = jwt.sign(data, JWT_SECRET);
-        res.json({authToken});
+        success=true;
+        res.json({success,authToken});
 
     } catch (error) {
         console.error(error.message);
