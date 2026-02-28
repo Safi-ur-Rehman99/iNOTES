@@ -5,15 +5,15 @@ const Alert = (props) => {
   const getIcon = (type) => {
     switch (type) {
       case 'success':
-        return <CheckCircle size={20} className="text-success" />;
+        return <CheckCircle size={20} style={{ color: 'var(--success)' }} />;
       case 'danger':
-        return <AlertCircle size={20} className="text-danger" />;
+        return <AlertCircle size={20} style={{ color: 'var(--danger)' }} />;
       case 'info':
-        return <Info size={20} className="text-info" />;
+        return <Info size={20} style={{ color: 'var(--info)' }} />;
       case 'warning':
-        return <AlertCircle size={20} className="text-warning" />;
+        return <AlertCircle size={20} style={{ color: 'var(--warning)' }} />;
       default:
-        return <Info size={20} className="text-primary" />;
+        return <Info size={20} style={{ color: 'var(--gold)' }} />;
     }
   }
 
@@ -28,7 +28,12 @@ const Alert = (props) => {
         <div
           className={`alert alert-${props.alert.type} d-flex align-items-center shadow-sm fade show`}
           role="alert"
-          style={{ borderRadius: '8px' }}
+          style={{
+            borderRadius: 'var(--radius-md)',
+            background: 'var(--gray-800)',
+            border: '1px solid var(--gray-600)',
+            color: 'var(--off-white)'
+          }}
         >
           {getIcon(props.alert.type)}
           <span className="ms-2">

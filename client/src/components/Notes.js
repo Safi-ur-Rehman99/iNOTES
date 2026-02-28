@@ -1,19 +1,30 @@
-import React, { useEffect,useState,useContext, useRef } from 'react'
+import { useEffect,useState,useContext, useRef } from 'react'
 import NoteContext from '../context/notes/NoteContext';
-
 import NoteItem from './NoteItem';
 import AddNote from './AddNote';
+import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 
-const Notes = () => {
+const Notes = (props) => {
+  const navigate = useNavigate();
   const context = useContext(NoteContext);
-      const [note,setNote]=useState({id:"",uTitle:"",uDescription:"",uTag :""})
+  const [note,setNote]=useState({id:"",uTitle:"",uDescription:"",uTag :""})
 
   const ref = useRef(null);
   const refClose = useRef(null);
+  const alertShown = useRef(false);
 
   const { notes, getNotes,editNote } = context;
   useEffect(() => {
+    if (!localStorage.getItem("token")) {
+      navigate("/login");
+      if (!alertShown.current) {
+        alertShown.current = true;
+        props.showAlert("Please login to access your notes", "warning");
+      }
+      return;
+    }
     getNotes();
     // eslint-disable-next-line
   }, [])
@@ -35,6 +46,16 @@ const Notes = () => {
   
       }
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.08
+      }
+    }
+  };
+
   return (
     <>
       <AddNote />
@@ -46,7 +67,10 @@ const Notes = () => {
           <div className="modal-dialog">
             <div className="modal-content">
               <div className="modal-header">
-                <h1 className="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                <h1 className="modal-title fs-5" id="exampleModalLabel">
+                  <i className="fa-solid fa-pen-to-square" style={{ color: '#FFD700', marginRight: '8px' }} />
+                  Edit Note
+                </h1>
                 <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" />
               </div>
               <div className="modal-body">
@@ -75,13 +99,32 @@ const Notes = () => {
         </div>
       </div>
 
-      <div className="row my-3">
-        {notes.map((note) => {
-          return <NoteItem key={note._id} note={note} updateNote={updateNote} />
-        })}
+      <div style={{ marginTop: '2rem', marginBottom: '0.5rem' }}>
+        <h2 className="section-heading" style={{ color: 'var(--white)' }}>
+          <i className="fa-solid fa-layer-group" style={{ color: '#FFD700', marginRight: '10px', fontSize: '1.3rem' }} />
+          All Notes
+        </h2>
+        <hr className="section-divider" />
       </div>
 
-
+      {notes.length === 0 ? (
+        <div className="empty-state">
+          <i className="fa-regular fa-note-sticky" style={{ display: 'block' }} />
+          <h3>No notes yet</h3>
+          <p>Create your first note using the form above to get started.</p>
+        </div>
+      ) : (
+        <motion.div
+          className="row"
+          variants={containerVariants}
+          initial="hidden"
+          animate="show"
+        >
+          {notes.map((note) => {
+            return <NoteItem key={note._id} note={note} updateNote={updateNote} />
+          })}
+        </motion.div>
+      )}
     </>
   )
 }
