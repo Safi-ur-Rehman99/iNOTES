@@ -4,7 +4,6 @@ const mongoURL = process.env.MONGO_URI || 'mongodb://localhost:27017/iNotes';
 const connectToMongo = async () => {
     try {
         await mongoose.connect(mongoURL);
-        console.log('connected to mongo successfully');
     } catch (error) {
         console.error('Failed to connect to mongo', error);
     }

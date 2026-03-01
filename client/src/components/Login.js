@@ -20,9 +20,7 @@ const Login = (props) => {
       },
       body:JSON.stringify(credentials)
     });
-    console.log('Login submitted', credentials)
     const json = await response.json();
-    console.log(json.success,json);
 
     if(json.success){
       localStorage.setItem('token',json.authToken);

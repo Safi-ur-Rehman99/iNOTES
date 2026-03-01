@@ -8,7 +8,7 @@ const port = process.env.PORT || 5000;
 connectToMongo();
 app.use(express.json())
 app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:3000',
+  origin: process.env.CLIENT_URL || 'https://i-notes-client-flax.vercel.app',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
 }));
