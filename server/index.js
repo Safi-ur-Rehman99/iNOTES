@@ -7,11 +7,20 @@ const app = express()
 const port = process.env.PORT || 5000;
 connectToMongo();
 app.use(express.json())
+
+// Strip trailing slash from CLIENT_URL to prevent CORS mismatch
+const clientOrigin = (process.env.CLIENT_URL || 'https://i-notes-client-flax.vercel.app').replace(/\/+$/, '');
 app.use(cors({
-  origin: process.env.CLIENT_URL || 'https://i-notes-client-flax.vercel.app',
+  origin: clientOrigin,
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
 }));
+
+// Health check
+app.get('/', (req, res) => {
+  res.json({ status: 'iNOTES API is running' });
+});
+
 //routes
 app.use('/api/auth', require('./routes/auth'))
 app.use('/api/notes', require('./routes/notes'))
