@@ -16,9 +16,12 @@ app.use(cors({
 app.use('/api/auth', require('./routes/auth'))
 app.use('/api/notes', require('./routes/notes'))
 
-app.listen(port, () => {
-  console.log(`iNOTES server listening on port ${port}`)
-})
+// Only listen locally — Vercel handles this in serverless mode
+if (process.env.VERCEL !== '1') {
+  app.listen(port, () => {
+    console.log(`iNOTES server listening on port ${port}`)
+  })
+}
 
 // Export for Vercel serverless
 module.exports = app;
