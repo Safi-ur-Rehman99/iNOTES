@@ -2,8 +2,17 @@ import React, { useRef, useMemo } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { Float } from '@react-three/drei'
 
+// Suppress THREE.Clock deprecation warning from @react-three/fiber internals
+// (fiber hasn't migrated to THREE.Timer yet — this is a known library-level issue)
+const _origWarn = console.warn
+console.warn = (...args) => {
+  if (typeof args[0] === 'string' && args[0].includes('THREE.Clock')) return
+  _origWarn.apply(console, args)
+}
+
 function GoldParticles({ count = 80 }) {
   const mesh = useRef()
+  const elapsed = useRef(0)
   const positions = useMemo(() => {
     const pos = new Float32Array(count * 3)
     for (let i = 0; i < count; i++) {
@@ -14,10 +23,11 @@ function GoldParticles({ count = 80 }) {
     return pos
   }, [count])
 
-  useFrame((state) => {
+  useFrame((_, delta) => {
+    elapsed.current += delta
     if (mesh.current) {
-      mesh.current.rotation.y = state.clock.elapsedTime * 0.02
-      mesh.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.01) * 0.1
+      mesh.current.rotation.y = elapsed.current * 0.02
+      mesh.current.rotation.x = Math.sin(elapsed.current * 0.01) * 0.1
     }
   })
 
@@ -44,11 +54,13 @@ function GoldParticles({ count = 80 }) {
 
 function FloatingShape({ position, geometry, speed = 1 }) {
   const meshRef = useRef()
+  const elapsed = useRef(0)
 
-  useFrame((state) => {
+  useFrame((_, delta) => {
+    elapsed.current += delta
     if (meshRef.current) {
-      meshRef.current.rotation.x = state.clock.elapsedTime * 0.15 * speed
-      meshRef.current.rotation.y = state.clock.elapsedTime * 0.1 * speed
+      meshRef.current.rotation.x = elapsed.current * 0.15 * speed
+      meshRef.current.rotation.y = elapsed.current * 0.1 * speed
     }
   })
 

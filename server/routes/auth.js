@@ -7,7 +7,7 @@ const fetchUser =require('../middleware/fetchUser');
 
 
 const { body, validationResult } = require('express-validator');
-const JWT_SECRET='messiIsTheGOAT@2024';
+const JWT_SECRET = process.env.JWT_SECRET;
 
 //ROUTE 1:create a user using: POST "/api/auth/createuser". No login required
 

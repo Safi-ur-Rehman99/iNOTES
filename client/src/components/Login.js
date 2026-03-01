@@ -7,7 +7,7 @@ const AuthBackground = lazy(() => import('./AuthBackground'))
 const Login = (props) => {
   const [credentials, setCredentials] = useState({ email: '', password: '' })
   const navigate = useNavigate()
-    const host="http://localhost:5000";
+    const host=process.env.REACT_APP_API_URL;
 
 
   const handleSubmit =  async (e) => {

@@ -608,8 +608,20 @@
   border-left: 4px solid var(--info) !important;
 }
 
-.Toastify__progress-bar {
-  background: var(--gold) !important;
+.Toastify__progress-bar--success {
+  background: var(--success) !important;
+}
+
+.Toastify__progress-bar--error {
+  background: var(--danger) !important;
+}
+
+.Toastify__progress-bar--warning {
+  background: var(--warning) !important;
+}
+
+.Toastify__progress-bar--info {
+  background: var(--info) !important;
 }
 
 .Toastify__close-button {

@@ -16,7 +16,7 @@ const Signup = (props) => {
       return;
     }
 
-    const host="http://localhost:5000";
+    const host=process.env.REACT_APP_API_URL;
     const response=await fetch(`${host}/api/auth/createuser`,{
       method:"POST",
       headers:{
