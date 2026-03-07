@@ -6,15 +6,26 @@ var cors = require('cors')
 const app = express()
 const port = process.env.PORT || 5000;
 connectToMongo();
-app.use(express.json())
 
-// Strip trailing slash from CLIENT_URL to prevent CORS mismatch
-const clientOrigin = (process.env.CLIENT_URL || 'https://i-notes-client-flax.vercel.app').replace(/\/+$/, '');
+// Build a small whitelist for allowed origins (trim trailing slashes)
+const normalize = (u) => (u || '').replace(/\/+$/, '');
+const prodClient = normalize(process.env.CLIENT_URL || 'https://i-notes-client-flax.vercel.app');
+const whitelist = [prodClient, 'http://localhost:3000', 'http://127.0.0.1:3000'].filter(Boolean);
+
+// Apply CORS headers before any body parsing so errors still include CORS headers
 app.use(cors({
-  origin: clientOrigin,
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: true
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true); // allow non-browser or server-to-server requests
+    const normalizedOrigin = normalize(origin);
+    if (whitelist.includes(normalizedOrigin)) return callback(null, true);
+    return callback(new Error('Not allowed by CORS'));
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  credentials: true,
+  allowedHeaders: ['Content-Type', 'auth-token', 'Authorization']
 }));
+
+app.use(express.json())
 
 // Health check
 app.get('/', (req, res) => {
