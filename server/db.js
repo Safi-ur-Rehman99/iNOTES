@@ -7,6 +7,7 @@ const connectToMongo = async () => {
         console.log('connected to mongo successfully');
     } catch (error) {
         console.error('Failed to connect to mongo', error);
+        throw error;
     }
 };
 

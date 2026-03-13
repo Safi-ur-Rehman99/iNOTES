@@ -9,6 +9,13 @@ const fetchUser =require('../middleware/fetchUser');
 const { body, validationResult } = require('express-validator');
 const JWT_SECRET = process.env.JWT_SECRET;
 
+const serverConfigError = (res) => {
+    return res.status(500).json({
+        success: false,
+        error: 'Server configuration error'
+    });
+};
+
 //ROUTE 1:create a user using: POST "/api/auth/createuser". No login required
 
 router.post('/createuser', [
@@ -46,6 +53,10 @@ router.post('/createuser', [
             id:user.id
         }
     }
+    if (!JWT_SECRET) {
+        console.error('Missing JWT_SECRET environment variable');
+        return serverConfigError(res);
+    }
     const authToken=jwt.sign(data,JWT_SECRET);
     success=true;
     res.json({success,authToken});
@@ -55,7 +66,10 @@ router.post('/createuser', [
     // res.json(user);
     } catch (error) {
         console.error(error.message);
-        res.status(500).send("Internal Server Error");
+        res.status(500).json({
+            success: false,
+            error: 'Internal Server Error'
+        });
     }
 });
 
@@ -93,13 +107,20 @@ router.post('/login', [
                 id: user.id
             }
         };
+        if (!JWT_SECRET) {
+            console.error('Missing JWT_SECRET environment variable');
+            return serverConfigError(res);
+        }
         const authToken = jwt.sign(data, JWT_SECRET);
         success=true;
         res.json({success,authToken});
 
     } catch (error) {
         console.error(error.message);
-        res.status(500).send("Internal Server Error");
+        res.status(500).json({
+            success: false,
+            error: 'Internal Server Error'
+        });
     }
 });
 
@@ -114,7 +135,10 @@ router.post('/getuser', fetchUser, [
 
     } catch (error) {
         console.error(error.message);
-        res.status(500).send("Internal Server Error");
+        res.status(500).json({
+            success: false,
+            error: 'Internal Server Error'
+        });
     }
 });
 
