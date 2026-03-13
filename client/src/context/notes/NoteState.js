@@ -4,6 +4,12 @@ import { useState } from "react";
 
 const NoteState=(props)=>{
   const host=process.env.REACT_APP_API_URL;
+
+  const getHeaders = () => ({
+    "Content-Type": "application/json",
+    "auth-token": localStorage.getItem("token"),
+    ...(host?.includes("ngrok") ? { "ngrok-skip-browser-warning": "true" } : {})
+  });
  
    const [notes,setnotes]=useState([]);
 
@@ -12,10 +18,7 @@ const NoteState=(props)=>{
     try {
     const response=await fetch(`${host}/api/notes/fetchnotes`,{
       method:"GET",
-      headers:{
-        "Content-Type":"application/json",
-        "auth-token":localStorage.getItem("token")
-      }
+      headers:getHeaders()
     });
     const json=await response.json();
     if(response.ok){
@@ -34,10 +37,7 @@ const NoteState=(props)=>{
     try {
      const response=await fetch(`${host}/api/notes/addnote`,{
       method:"POST",
-      headers:{
-        "Content-Type":"application/json",
-        "auth-token":localStorage.getItem("token")
-      },
+      headers:getHeaders(),
       body:JSON.stringify({title,description,tag})
     });
     const note=await response.json();
@@ -57,10 +57,7 @@ const NoteState=(props)=>{
     try {
          const response=await fetch(`${host}/api/notes/deletenote/${id}`,{
       method:"DELETE",
-      headers:{
-        "Content-Type":"application/json",
-        "auth-token":localStorage.getItem("token")
-      },
+      headers:getHeaders(),
      
     });
     if(response.ok){
@@ -79,10 +76,7 @@ const NoteState=(props)=>{
       try {
        const response=await fetch(`${host}/api/notes/updatenote/${id}`,{
       method:"PUT",
-      headers:{
-        "Content-Type":"application/json",
-        "auth-token":localStorage.getItem("token")
-      },
+      headers:getHeaders(),
       body:JSON.stringify({title,description,tag})
     });
     if(response.ok){

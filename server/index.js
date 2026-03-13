@@ -12,6 +12,16 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
 }));
+
+// Simple health routes for browser/ngrok checks
+app.get('/', (req, res) => {
+  res.json({ status: 'iNOTES API is running' });
+});
+
+app.get('/api/health', (req, res) => {
+  res.json({ ok: true });
+});
+
 //routes
 app.use('/api/auth', require('./routes/auth'))
 app.use('/api/notes', require('./routes/notes'))
